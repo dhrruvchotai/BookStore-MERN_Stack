@@ -1,8 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import Book from "./Models/bookModel.js";
+import booksRoute from './routes/booksRoute.js'
 import bodyParser from "body-parser";
+import cors from "cors"
 
 const app = express();
 dotenv.config();
@@ -10,54 +11,22 @@ dotenv.config();
 const mongoDBURL = process.env.ConnStr;
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json())
 
-//Routes
-app.get('/', (req, res) => {
-    res.send("Hello from my MERN Project.");
-});
+//Middleware to use all the books routes.
+app.use('/books', booksRoute);
 
-//Route to add a Book.
-app.post('/books', async(req, res) => {
+//Middleware for handling cors policy(while fetching api in react)
 
-    try {
+//method1 : allow all origins with a default of cors(*)
+// app.use(cors());
 
-        if (!req.body.title || !req.body.author || !req.body.publishYear) {
-            return res.status(400).send({
-                message: 'Enter all required fields.',
-            });
-        }
-
-        const newBook = {
-            title: req.body.title,
-            author: req.body.author,
-            publishYear: req.body.publishYear
-        }
-
-        const book = await Book.create(newBook);
-        return res.status(201).send(book);
-
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).send({ message: error.message })
-    }
-
-});
-
-//Route to get all books.
-app.get('/books', async(req, res) => {
-    try {
-
-        const books = await Book.find();
-        return res.status(200).json(books);
-        // res.status(200).send(books); uh can use this but upper is best for APIs.
-
-    } catch (error) {
-
-        console.log(error.message);
-        res.status(500).send({ message: error.message });
-
-    }
-});
+//method2 : allow custom origins
+app.use(cors({
+    origin: 'http://localhost:4140',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: ['content-Type']
+}));
 
 //Connection To DB
 mongoose
