@@ -16,6 +16,7 @@ app.get('/', (req, res) => {
     res.send("Hello from my MERN Project.");
 });
 
+//Route to add a Book.
 app.post('/books', async(req, res) => {
 
     try {
@@ -42,6 +43,21 @@ app.post('/books', async(req, res) => {
 
 });
 
+//Route to get all books.
+app.get('/books', async(req, res) => {
+    try {
+
+        const books = await Book.find();
+        return res.status(200).json(books);
+        // res.status(200).send(books); uh can use this but upper is best for APIs.
+
+    } catch (error) {
+
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+
+    }
+});
 
 //Connection To DB
 mongoose
