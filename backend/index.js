@@ -19,14 +19,14 @@ app.use('/books', booksRoute);
 //Middleware for handling cors policy(while fetching api in react)
 
 //method1 : allow all origins with a default of cors(*)
-// app.use(cors());
+app.use(cors());
 
 //method2 : allow custom origins
-app.use(cors({
-    origin: 'http://localhost:4140',
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['content-Type']
-}));
+// app.use(cors({
+//     origin: 'http://localhost:4140',
+//     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+//     allowedHeaders: ['content-Type']
+// }));
 
 //Connection To DB
 mongoose
